@@ -1,1 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audit Dashboard</title>
 
+  <!-- React + ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <!-- Recharts -->
+  <script src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
+
+  <!-- Babel (so we can write JSX directly) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+    }
+
+    .dashboard {
+      padding: 24px;
+    }
+
+    .header {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .card-title {
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background: #f1f3f5;
+    }
+
+    tr:hover {
+      background: #f9fafb;
+    }
+  </style>
+</head>
+
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+
+const {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
+  BarChart, Bar, ResponsiveContainer
+} = Recharts;
+
+function Dashboard() {
+
+  // Fake monthly sales data
+  const salesData = [
+    { month: "Jan", sales: 12000 },
+    { month: "Feb", sales: 15000 },
+    { month: "Mar", sales: 18000 },
+    { month: "Apr", sales: 17000 },
+    { month: "May", sales: 21000 },
+    { month: "Jun", sales: 24000 }
+  ];
+
+  // Fake category performance
+  const categoryData = [
+    { category: "Hair Care", score: 4.2 },
+    { category: "Skin Care", score: 3.8 },
+    { category: "Oral Care", score: 4.5 },
+    { category: "Deodorants", score: 3.5 }
+  ];
+
+  // Fake audit table data
+  const auditTable = [
+    { store: "Store A", rep: "REP001", forwardShare: 4, stockPressure: 3 },
+    { store: "Store B", rep: "REP002", forwardShare: 5, stockPressure: 4 },
+    { store: "Store C", rep: "REP003", forwardShare: 3, stockPressure: 2 },
+    { store: "Store D", rep: "REP004", forwardShare: 4, stockPressure: 5 }
+  ];
+
+  return (
+    <div className="dashboard">
+      <div className="header">FMCG Audit Dashboard</div>
+
+      <div className="grid">
+
+        {/* Line Chart */}
+        <div className="card">
+          <div className="card-title">Monthly Sales (ZAR)</div>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={salesData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Line type="monotone" dataKey="sales" stroke="#3b82f6" strokeWidth={3} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Bar Chart */}
+        <div className="card">
+          <div className="card-title">Category Performance Score</div>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={categoryData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="category" />
+              <YAxis domain={[0,5]} />
+              <Tooltip />
+              <Bar dataKey="score" fill="#10b981" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Table */}
+        <div className="card" style={{ gridColumn: "1 / -1" }}>
+          <div className="card-title">Recent Audits</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Store</th>
+                <th>Rep</th>
+                <th>Forward Share</th>
+                <th>Stock Pressure</th>
+              </tr>
+            </thead>
+            <tbody>
+              {auditTable.map((row, index) => (
+                <tr key={index}>
+                  <td>{row.store}</td>
+                  <td>{row.rep}</td>
+                  <td>{row.forwardShare}</td>
+                  <td>{row.stockPressure}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Dashboard />);
+
+</script>
+</body>
+</html>
